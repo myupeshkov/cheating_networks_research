@@ -1,0 +1,62 @@
+---
+title: "research"
+output:
+  pdf_document: 
+    keep_tex: yes
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+data: '2020-23-05'
+  
+---
+```{r setup, include=FALSE}
+library("memisc")
+library("dplyr")
+library("psych")
+library("lmtest")
+library("ggplot2")
+library("foreign")
+library("hexbin")
+library('huxtable')
+library("tidyverse")
+library(pander)
+library(knitr)
+library(shiny)
+library(rmarkdown)
+library(devtools)
+library(knitr)
+library(ggpubr)
+library("gridExtra")
+require('jtools')
+library('ggstance')
+require("stargazer")
+library(broom.mixed)
+knitr::opts_chunk$set(fig.width = 12, fig.height = 8) 
+data <- read.csv("main_table_second_norm.csv", header = TRUE, encoding = 'UTF-8')
+data1 <- read.csv("main_table_second.csv", header = TRUE, encoding = 'UTF-8')
+data$dgroup <- factor(data$group)
+```
+
+```{r, results='asis', warning=FALSE, echo=FALSE}
+stargazer(data1, title="Summary", header=FALSE, type='latex')
+```
+
+```{r, results='asis', warning=FALSE, echo=FALSE}
+model1 <- lm(data=data, cheat ~ cheat_formal)
+model3 <- lm(data=data, cheat ~ cheat_formal + gpa_formal)
+model4 <- lm(data=data, cheat ~ cheat_formal + gpa_formal + sex)
+model5 <- lm(data=data, cheat ~ cheat_formal + gpa_formal + sex + gpa)
+model6 <- lm(data=data, cheat ~ cheat_formal + gpa_formal + sex + gpa + dgroup)
+stargazer::stargazer(model1, model3, model4, model5, model6, header=FALSE, type='latex', single.row = TRUE, title= 'Formal social network', font.size="scriptsize")
+```
+
+```{r, results='asis', warning=FALSE, echo=FALSE}
+model11 <- lm(data=data, cheat ~ cheat_informal)
+model31 <- lm(data=data, cheat ~ cheat_informal + gpa_informal)
+model41 <- lm(data=data, cheat ~ cheat_informal + gpa_informal + sex)
+model51 <- lm(data=data, cheat ~ cheat_informal + gpa_informal + sex + gpa)
+model61 <- lm(data=data, cheat ~ cheat_informal + gpa_informal + sex + gpa + dgroup)
+stargazer::stargazer(model11, model31, model41, model51, model61, header=FALSE, type='latex', single.row = TRUE, title= 'Informal social network', font.size="scriptsize")
+```
+
+
